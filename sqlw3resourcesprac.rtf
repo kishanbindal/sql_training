@@ -61,7 +61,7 @@ where winner = 'Dennis Gabor';\
 \
 \pard\pardeftab720\partightenfactor0
 
-\f1\b \cf4 \outl0\strokewidth0 \strokec4 15.
+\f1\b \cf2 15.
 \f0\b0 \'a0Write a SQL query to give the name of the 'Physics' winners since the year 1950.\
 => select winner from nobel_win\
 	where subject = 'Physics' and year >= 1950;\
@@ -75,8 +75,7 @@ where year >= 1965 and year <= 1975;\
 
 \f1\b SUBQUERIES PRACTISE\
 \
-\pard\pardeftab720\partightenfactor0
-\cf4 1.
+1.
 \f0\b0 \'a0Write a query to display all the orders from the orders table issued by the salesman 'Paul Adam'.\'a0\
 => select ord_no, ord_date, purch_amt\
 from Orders\
@@ -100,5 +99,76 @@ where salesman_id = (select salesman_id from Salesman where city = 'London')\
 \f1\b 5.
 \f0\b0 \'a0Write a query to find all orders attributed to a salesman in New york.\'a0\
 => select ord_no, ord_date, purch_amt, salesman_id from Orders where salesman_id = (select salesman_id from Salesman where city='New York')\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf4 \outl0\strokewidth0 \strokec4 6.\'a0
+\f0\b0 Write a query to display the commission of all the salesmen servicing customers in Paris.\
+=> select commission from Salesman\
+where salesman_id IN (select salesman_id from Customer where city = 'Paris') \
+\cf2 \outl0\strokewidth0 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf4 \outl0\strokewidth0 \strokec4 7.
+\f0\b0 \'a0Write a query to display all the customers whose id is 2001 bellow the salesman ID of Mc Lyon\
+\
+select * from Customer\
+where customer_id = (select salesman_id - 2001 from Salesman where name='Mc Lyon')\
+\
+8. select grade, count(*) from customer\
+group by grade\
+having grade > (select avg(grade) from customer where city = 'New York')\
+\
+10. select cust_name, city from customer\
+where customer_id in (select customer_id from orders where ord_date = '2012/08/17')\
+\
+11. \
+select name, salesman_id from salesman\
+where salesman_id in (\
+select salesman_id from customer \
+group by salesman_id\
+having count(salesman_id) > 1)\
+\
+12. \
+select ord_no, purch_amt from orders tbl1\
+where purch_amt > (\
+select avg(purch_amt) from orders tbl2\
+where tbl1.customer_id = tbl2.customer_id)\
+\
+13. select ord_no, purch_amt from orders tbl1\
+where purch_amt >= (\
+select avg(purch_amt) from orders tbl2\
+where tbl1.customer_id = tbl2.customer_id)\
+order by ord_no\
+\
+14. select ord_date, sum(purch_amt) from orders tbl1\
+group by ord_date\
+having sum(purch_amt) > (\
+select max(purch_amt) + 1000 from orders tbl2\
+where tbl1.ord_date = tbl2.ord_date\
+)\
+\
+15. select * from customer \
+where exists (\
+select * from customer where city = 'London')\
+\
+16. select salesman_id, name from salesman \
+where salesman_id in (\
+select distinct salesman_id from customer a\
+where exists(\
+    select * from customer b \
+    where b.cust_name <> a.cust_name\
+    and b.salesman_id = a.salesman_id\
+    )\
+)\
+\
+17.  select * from salesman\
+where salesman_id in (\
+select salesman_id from customer a\
+where not exists(\
+    select salesman_id from customer b \
+    where b.salesman_id = a.salesman_id and b.cust_name<>a.cust_name\
+    )\
+)\
 \
 }
